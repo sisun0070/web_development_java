@@ -1,5 +1,7 @@
 package c15_casting.centralcontroller;
 
+import java.util.Arrays;
+
 public class CentralControl {
 
     // 필드 선언
@@ -25,8 +27,8 @@ public class CentralControl {
         int emptyIndex = checkEmpty();  // checkEmpty()의 리턴값이 addDevice에서 이용되는 '함수형 프로그래밍'
 
         if (emptyIndex == -1) {     // java에서는 마이너스인덱스 개념이 없기 때문에 checkEmpty()
-                                    // 메서드에서 -1을 반환시킨 이유는
-                                    // 비어있는 배열이 없다는 의미이기 때문에 다음과 같이 작성했습니다.
+            // 메서드에서 -1을 반환시킨 이유는
+            // 비어있는 배열이 없다는 의미이기 때문에 다음과 같이 작성했습니다.
             System.out.println("더 이상 장치를 연결할 수 없습니다.");
             return;                  // 해당 메서드를 종료한다는 의미로 return;을 사용함 ';'에 주목
 
@@ -39,11 +41,11 @@ public class CentralControl {
 
 
     public int checkEmpty() {       // 비어있는 배열의 index를 반환할 것이기 때문에
-                                    // 그리고 그 비어있는 배열의 index에 addDevice()를 통해
-                                    // 새로운 전자 제품을 등록하는 방식으로 코딩할 예정
+        // 그리고 그 비어있는 배열의 index에 addDevice()를 통해
+        // 새로운 전자 제품을 등록하는 방식으로 코딩할 예정
         // 배열 내부를 탐색하여 비어있는 '첫 번째' 인덱스를 리턴할 예정
-        for(int i = 0; i < deviceArrary.length; i++) {
-            if(deviceArrary[i] == null) {   // deviceArray[i]에 값이 없다면
+        for (int i = 0; i < deviceArrary.length; i++) {
+            if (deviceArrary[i] == null) {   // deviceArray[i]에 값이 없다면
                 return i;
             }
 
@@ -58,24 +60,93 @@ public class CentralControl {
         // 해당 경우에 생겨날 수 있는 문제점 :
         //      특정 배열 인덱스 내에 아무 객체가 없다면 .on()을 적용시켰을 경우 컴파일 에러가 나기
         //      때문에 해당 부분을 감안한 코드를 작성합니다.
-        for(int i = 0; i<deviceArrary.length; i++) {
-            if(deviceArrary[i] == null) {
+        for (int i = 0; i < deviceArrary.length; i++) {
+            if (deviceArrary[i] == null) {
                 // 특정 인덱스 넘버의 elements가 null값이라면
                 continue;       // 해당 반복문파트는 종료하고 다음 반복문 인덱스로 넘기겠다는 의미
             }
             deviceArrary[i].on();       // continue가 실행되지 않았다면 해당 라인의 코드가
-                                        // 실행되도록 작성
+            // 실행되도록 작성
         }
     }
-    // 전원 버튼을 끄는 메서드 powerOff()를 구현하세요.'
+
+    // 전원 버튼을 끄는 메서드 powerOff()를 구현하세요.
     public void powerOff() {
         // 반복문 돌면서 비어있으면 지나가고, 아니면 꺼야함
-        for(int i = 0; i<deviceArrary.length; i++) {
-            if(deviceArrary[i] == null) {
+        for (int i = 0; i < deviceArrary.length; i++) {
+            if (deviceArrary[i] == null) {
                 continue;
             }
             deviceArrary[i].off();
         }
     }
 
+    //  향상된 for문을 이용하여 powerOff() 메서드를 구현하시오 -> 이후 Main에서 power2() 메서드 실행하세요
+    public void powerOff2() {
+        // 자료형 변수명(객체명) : 반복가능객체(배열)
+        for (Power device : deviceArrary) {         // deviceArray라는 배열의 각 요소에 device라는 객체명을 임시로 붙임
+            // null이면 continue
+            if (device == null) {
+                continue;
+            }
+            device.off();
+        }
+    }
+
+
+
+    // displayInfo()에 해당하는 메서드를 작성해야 함 -> 배열의 요소를 하나씩 뽑아내는 것도 가능하고, 배열 전체를 출력하셔도 됩니다.
+    // 코드 내부에 sout을 구현하겠다는 의미 -> void
+//    public void displayInfo() {
+//        for(int i = 0; i<deviceArrary.length; i++){
+//            if(deviceArrary[i]==null) {
+//                return;
+//            }
+//        }
+
+    // 내부에 sout 구현
+    // 배열이 가득차지 않았을 경우를 대비해야 함
+    // 각 요소들을 하나씩 뽑게 될 예정인데 그 경우 null 값을 만나게 되면 컴파일 오류가 생기기 때문
+    // 배열 내부의 요소를 하나씩 뽑게 되는 방식이 뭐였는지 떠올리셔야 됩니다.
+    public void displayInfo() {
+        System.out.println("현재 연결된 자치 목록 : ");
+        // 각 요소를 하나씩 뽑기 위한 반복문 작성
+        for (int i = 0; i < deviceArrary.length; i++) {
+            if (deviceArrary[i] == null) {
+                System.out.println("슬롯[" + i + "]번 : 비어있음");
+                continue;           // 현재 반복을 종료하고 i++시킨 다음 반복문으로 넘어가라는 의미
+            }
+            System.out.println("슬롯[" + i + "]번 : " + deviceArrary[i].getClass().getSimpleName());
+        }
+    }
+
+    public void displayInfo3() {
+        // 배열 전체를 출력하는 메서드
+        System.out.println("현재 연결된 장치 목록 : ");
+        System.out.println(Arrays.toString(deviceArrary));
+    }
+
+    // 배열 내부를 돌면서 요소의 고유 메서드들을 호출하는 예제 메서드
+    public void performSpecificMethod() {
+        for(Power device : deviceArrary) {
+            if (device instanceof  Computer) {
+                // deviceArray 내부에 있는 요소라면 기본적으로 Power 인터페이스의 객체이거나 혹은
+                // (그런데 인터페이스는 객체 생성 불가능)이거나 혹은
+                // Power 인터페이스를 상속받은 클래스의 객체에 해당합니다.
+                // 이상의 코드는 배열 내부의 요소가 Computer 클래스의 인스턴스라면 다운 캐스팅을 실행
+                Computer computer = (Computer) device;      // 실행이 된다면 Computer 클래스로 다운캐스팅
+                // 이제 객체명 computer는 Computer 클래스의 인스턴스이므로 Computer 클래스에 정의된
+                // 고유 메서드를 실행 가능
+                computer.compute();
+            }else if (device instanceof Mouse) {
+                Mouse mouse = (Mouse) device;
+                mouse.leftClick();  // LED 클래스에 changeColor() 메서드를 정의하고,
+                                    // sout("색깔을 바꿉니다.")라고 한 후에 다운 캐스팅 하세요.
+            }else if (device instanceof LED) {
+                LED led = (LED) device;
+                led.changeColor();
+            } // 이상의 코드가 지시사항2번 -> Main으로 가야됨.
+        }
+    }
 }
+
