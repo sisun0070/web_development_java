@@ -51,7 +51,7 @@ public class Teacher {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         c16_object_classes.Teacher teacher = (c16_object_classes.Teacher) o;
-        return Objects.equals(name, teacher.name) && Objects.equals(schoolName, teacher.schoolName);
+        return Objects.equals(name, teacher.getName()) && Objects.equals(schoolName, teacher.getSchoolName());
     }
 
 
